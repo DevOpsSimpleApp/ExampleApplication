@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.0000" tests="2" failures="0">
+  <testsuite name="Root Suite" timestamp="2026-03-13T16:45:45" tests="0" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Math App Unit Tests" timestamp="2026-03-13T16:45:45" tests="2" file="C:\Users\eskan\Downloads\Simple Application (2)\SimpleApplication\test\test.js" time="0.0000" failures="0">
+    <testcase name="Math App Unit Tests should return 5 when adding 2 and 3" time="0.0000" classname="should return 5 when adding 2 and 3">
+    </testcase>
+    <testcase name="Math App Unit Tests should return -10 when adding -5 and -5" time="0.0000" classname="should return -10 when adding -5 and -5">
+    </testcase>
+  </testsuite>
+</testsuites>
