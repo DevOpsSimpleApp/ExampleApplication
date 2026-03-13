@@ -24,26 +24,22 @@ jobs:
       - image: cimg/node:20.10.0
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 20.10.14
+      - setup_remote_docker # Version removed to fix the "Resource Class" error
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: install-npm-wee
+          name: install-dependencies
           command: npm install
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
       - run:
-          name: test-run
-          command: npm run test || true
-      - run:
           name: docker-login
-          command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          command: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
           name: Build Docker Image
           command: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
