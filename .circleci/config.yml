@@ -21,7 +21,7 @@ jobs:
   build:
     working_directory: ~/ExampleApplication
     docker:
-      - image: cimg/node:20.10.0 # Updated to match your current working Node 20
+      - image: cimg/node:20.10.0
     steps:
       - checkout
       - run:
