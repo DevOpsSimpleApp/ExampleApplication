@@ -21,7 +21,7 @@ jobs:
   build:
     working_directory: ~/example_application
     docker:
-      - image: cimg/node:20.18.0 # Updated to 20.18.0 to satisfy npm 11 requirements
+      - image: cimg/node:20.18.0
     steps:
       - checkout
       - setup_remote_docker
@@ -30,6 +30,7 @@ jobs:
           command: npm install
       - run:
           name: docker-login
+          # This command pipes the password into docker login to avoid the "Interactive" error
           command: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
           name: Build Docker Image
@@ -49,7 +50,7 @@ jobs:
           name: deploy-application
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "
-              sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && \
+              echo \"$DOCKER_PASSWORD\" | sudo docker login -u $DOCKER_USERNAME --password-stdin && \
               sudo docker pull $DOCKER_USERNAME/$IMAGE_NAME:latest && \
               sudo docker stop example_app || true && \
               sudo docker rm example_app || true && \
