@@ -40,7 +40,7 @@ jobs:
               git pull origin main
               npm install
               
-              # Ensure the SSL keys exist in the bin folder for the app to start
+              # Ensure the SSL keys exist in the bin folder
               cd bin
               if [ ! -f server.crt ]; then
                 openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
@@ -48,6 +48,6 @@ jobs:
                 cp server.crt certificate.pem
               fi
               
-              # Restart the app with PM2
+              # Restart the app
               pm2 restart example_app || pm2 start www --name example_app
             EOF
