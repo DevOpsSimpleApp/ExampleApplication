@@ -34,9 +34,7 @@ jobs:
       - run:
           name: Build and Push Docker Image
           command: |
-            # This builds the image locally in CircleCI
             docker build -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
-            # This pushes it to your Hub (eskandaratrak/devops_ca)
             docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
 
   deploy:
@@ -56,8 +54,7 @@ jobs:
               sudo docker rm example_app || true && \
               sudo docker run -d \
                 --name example_app \
+                --restart always \
                 -p 8443:8443 \
-                -e SERVER=\"$SERVER\" \
-                -e PRIVATE_KEY=\"$PRIVATE_KEY\" \
                 \"$DOCKER_USERNAME/$IMAGE_NAME:latest\"
             "
