@@ -34,7 +34,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "REPLACE_WITH_YOUR_ACTUAL_FINGERPRINT" # CircleCI gives you this after you add the key in Step 2
+            - "YOUR_FINGERPRINT_HERE"
       - run:
           name: Deploy to EC2
           command: |
@@ -44,8 +44,8 @@ jobs:
               npm install && \
               cd bin && \
               if [ ! -f server.crt ]; then
-                openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost'
-                cp server.key privatekey.pem
+                openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost' && \
+                cp server.key privatekey.pem && \
                 cp server.crt certificate.pem
               fi && \
               pm2 restart example_app || pm2 start www --name example_app
