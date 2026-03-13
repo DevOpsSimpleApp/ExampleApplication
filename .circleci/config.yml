@@ -30,18 +30,13 @@ jobs:
           command: npm install
       - run:
           name: docker-login
-          command: |
-            # Using echo to pipe the password/token to avoid TTY issues
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          command: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
-          name: Build Docker Image
+          name: Build and Push Docker Image
           command: |
-            # We explicitly use the variables here to tag the image correctly
+            # This builds the image locally in CircleCI
             docker build -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
-      - run:
-          name: Publish Docker Image
-          command: |
-            # This is where the 'denied' error usually happens if names don't match
+            # This pushes it to your Hub (eskandaratrak/devops_ca)
             docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
 
   deploy:
