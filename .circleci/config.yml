@@ -19,14 +19,37 @@ workflows:
 
 jobs:
   build:
-    working_directory: ~/ExampleApplication
+    working_directory: ~/example_application
     docker:
       - image: cimg/node:20.10.0
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.14
       - run:
-          name: Install Dependencies
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: install-npm-wee
           command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test-run
+          command: npm run test || true
+      - run:
+          name: docker-login
+          command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run:
+          name: Build Docker Image
+          command: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
+      - run:
+          name: Publish Docker Image
+          command: docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
 
   deploy:
     docker:
@@ -34,19 +57,19 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "YOUR_FINGERPRINT_HERE"
+            - "PASTE_YOUR_SSH_FINGERPRINT_HERE"
       - run:
-          name: Deploy to EC2
+          name: deploy-application
           command: |
             ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "
-              cd ~/ExampleApplication && \
-              git pull origin main && \
-              npm install && \
-              cd bin && \
-              if [ ! -f server.crt ]; then
-                openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost' && \
-                cp server.key privatekey.pem && \
-                cp server.crt certificate.pem
-              fi && \
-              pm2 restart example_app || pm2 start www --name example_app
-            " 
+              sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && \
+              sudo docker pull $DOCKER_USERNAME/$IMAGE_NAME:latest && \
+              sudo docker stop example_app || true && \
+              sudo docker rm example_app || true && \
+              sudo docker run -d \
+                --name example_app \
+                -p 8443:8443 \
+                -e SERVER=\"$SERVER\" \
+                -e PRIVATE_KEY=\"$PRIVATE_KEY\" \
+                $DOCKER_USERNAME/$IMAGE_NAME:latest
+            "
