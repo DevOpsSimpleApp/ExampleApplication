@@ -32,22 +32,21 @@ jobs:
     docker:
       - image: cimg/node:20.10.0
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "REPLACE_WITH_YOUR_ACTUAL_FINGERPRINT" # CircleCI gives you this after you add the key in Step 2
       - run:
-          name: Deploy to EC2 via SSH
+          name: Deploy to EC2
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \<< 'EOF'
-              cd ~/ExampleApplication
-              git pull origin main
-              npm install
-              
-              # Ensure the SSL keys exist in the bin folder
-              cd bin
+            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "
+              cd ~/ExampleApplication && \
+              git pull origin main && \
+              npm install && \
+              cd bin && \
               if [ ! -f server.crt ]; then
-                openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+                openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost'
                 cp server.key privatekey.pem
                 cp server.crt certificate.pem
-              fi
-              
-              # Restart the app with PM2
+              fi && \
               pm2 restart example_app || pm2 start www --name example_app
-            EOF
+            "
