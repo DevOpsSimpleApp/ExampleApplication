@@ -21,22 +21,13 @@ jobs:
   build:
     working_directory: ~/example_application
     docker:
-      - image: cimg/node:20.10.0
+      - image: cimg/node:20.18.0 # Updated to 20.18.0 to satisfy npm 11 requirements
     steps:
       - checkout
-      - setup_remote_docker # Version removed to fix the "Resource Class" error
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - setup_remote_docker
       - run:
           name: install-dependencies
           command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
       - run:
           name: docker-login
           command: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
@@ -49,7 +40,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/node:20.10.0
+      - image: cimg/node:20.18.0
     steps:
       - add_ssh_keys:
           fingerprints:
