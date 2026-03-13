@@ -56,5 +56,7 @@ jobs:
                 --name example_app \
                 --restart always \
                 -p 8443:8443 \
+                -v /home/ubuntu/privatekey.pem:/usr/src/app/privatekey.pem \
+                -v /home/ubuntu/server.crt:/usr/src/app/server.crt \
                 \"$DOCKER_USERNAME/$IMAGE_NAME:latest\"
-            " 
+            "
