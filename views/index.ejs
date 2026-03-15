@@ -2,14 +2,54 @@
 <html>
   <head>
     <title><%= title %></title>
+    <style>
+      body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 20px; }
+      .container { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      h1 { color: #232f3e; border-bottom: 2px solid #35171-60-124; padding-bottom: 10px; }
+      .badge { background: #e7f3ff; color: #007bff; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+      .link-section { margin-top: 30px; background: #f9f9f9; padding: 15px; border-radius: 5px; }
+      ul { list-style-type: none; padding: 0; }
+      li { margin-bottom: 10px; padding: 8px; border-bottom: 1px solid #eee; }
+      a { color: #0066cc; text-decoration: none; font-weight: bold; }
+      a:hover { text-decoration: underline; }
+      .status { color: #28a745; font-weight: bold; }
+    </style>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <ul>
-      <li>Coffee</li>
-      <li>Tea</li>
-      <li>Water</li>
-      <li>add more...</li>
-    </ul>
+    <div class="container">
+      <h1><%= title %> <span class="badge">v2.0 (Automated)</span></h1>
+      
+      <p>This application is part of the <strong>DevOps CA Project</strong>. It is currently running in a Docker container on an AWS EC2 instance, deployed via a fully automated CI/CD pipeline.</p>
+
+      <h3>Project Menu</h3>
+      <ul>
+        <li>☕ Coffee</li>
+        <li>🍵 Tea</li>
+        <li>💧 Water</li>
+        <li>🚀 <strong>Status:</strong> <span class="status">Live & Secure (HTTPS)</span></li>
+      </ul>
+
+      <div class="link-section">
+        <h3>Deployment Architecture Links</h3>
+        <ul>
+          <li>
+            <strong>GitHub Repository:</strong> 
+            <a href="https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME" target="_blank">View Source Code</a>
+          </li>
+          <li>
+            <strong>Docker Hub Image:</strong> 
+            <a href="https://hub.docker.com/r/eskandaratrak/devops_ca" target="_blank">View Docker Registry</a>
+          </li>
+          <li>
+            <strong>Infrastructure:</strong> 
+            <a href="http://35.171.60.124" target="_blank">AWS EC2 (Elastic IP: 35.171.60.124)</a>
+          </li>
+          <li>
+            <strong>Pipeline:</strong> 
+            <a href="https://circleci.com/" target="_blank">CircleCI Build Status</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </body>
-</html> 
+</html>
